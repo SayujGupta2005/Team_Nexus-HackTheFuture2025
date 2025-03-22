@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Household Insight Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Household Insight Hub</h1>
+        <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Ashoka_Chakra.svg" alt="Ashoka Chakra" class="chakra" /> -->
+        <nav>
+            <button onclick="showSection('simple')">Prediction</button>
+            <button onclick="showSection('advanced')">Explore</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Simple Section -->
+        <section id="simple" class="content-section active">
+            <h2>Search and Prediction</h2>
+            <div class="tab-buttons">
+                <button onclick="showTab('search')">Search</button>
+                <button onclick="showTab('predict')">Predict</button>
+            </div>
+
+            <div id="search" class="tab-content active">
+                <h3>Search Household</h3>
+                <input type="text" id="hh_id" placeholder="Enter HCES ID">
+                <button onclick="searchHousehold()">Search</button>
+                <div id="search-results"></div>
+            </div>
+
+            <div id="predict" class="tab-content">
+                <h3>Predict MPCE and Total Expense</h3>
+                <form id="predict-form">
+                    <label for="hh_id">HCES ID:</label>
+                    <input type="text" id="hh_id" required>
+                    
+                    <label for="sector">Sector:</label>
+                    <select id="sector">
+                        <option value="Urban">Urban</option>
+                        <option value="Rural">Rural</option>
+                    </select>
+                    
+                    <label for="state">State:</label>
+                    <select id="state-select" class="state-select">
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                        <option value="Assam">Assam</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chhattisgarh">Chhattisgarh</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Manipur">Manipur</option>
+                        <option value="Meghalaya">Meghalaya</option>
+                        <option value="Mizoram">Mizoram</option>
+                        <option value="Nagaland">Nagaland</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Sikkim">Sikkim</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="Tripura">Tripura</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                        <option value="Chandigarh">Chandigarh</option>
+                        <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                        <option value="Lakshadweep">Lakshadweep</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Puducherry">Puducherry</option>
+                        <option value="Ladakh">Ladakh</option>
+                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                    </select>
+                    
+                    <label for="nss_region">NSS Region:</label>
+                    <input type="number" id="nss_region" min="0" max="371">
+                    
+                    <label for="district">District:</label>
+                    <input type="number" id="district" min="1" max="71">
+
+                    <label for="household_type">Household Type:</label>
+                    <input type="number" id="household_type" min="1" max="9" required>
+                    
+                    <label for="household_size">Household Size:</label>
+                    <input type="number" id="household_size" min="1" required>
+                    
+                    <label for="nco_3d">NCO 3D Code:</label>
+                    <input type="number" id="nco_3d" required>
+                    
+                    <label for="nic_5d">NIC 5D Code:</label>
+                    <input type="number" id="nic_5d" required>
+                    
+                    <h3>Online Purchases (Last 365 days)</h3>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="clothing"> Clothing</label>
+                        <label><input type="checkbox" id="footwear"> Footwear</label>
+                        <label><input type="checkbox" id="furniture"> Furniture & Fixtures</label>
+                        <label><input type="checkbox" id="mobile"> Mobile Handset</label>
+                        <label><input type="checkbox" id="personal_goods"> Personal Goods</label>
+                        <label><input type="checkbox" id="recreation"> Recreation Goods</label>
+                        <label><input type="checkbox" id="household_appliances"> Household appliances</label>
+                        <label><input type="checkbox" id="crockery"> Crockery & utensils</label>
+                        <label><input type="checkbox" id="sports_goods"> Sports goods</label>
+                        <label><input type="checkbox" id="medical"> Medical equipment</label>
+                        <label><input type="checkbox" id="bedding"> Bedding</label>
+                    </div>
+                    
+                    <h3>Household Possessions</h3>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="television"> Television</label>
+                        <label><input type="checkbox" id="radio"> Radio</label>
+                        <label><input type="checkbox" id="laptop"> Laptop/PC</label>
+                        <label><input type="checkbox" id="mobile"> Mobile handset</label>
+                        <label><input type="checkbox" id="bicycle"> Bicycle</label>
+                        <label><input type="checkbox" id="motorcycle"> Motorcycle/scooter</label>
+                        <label><input type="checkbox" id="motorcar"> Motorcar/jeep/van</label>
+                        <label><input type="checkbox" id="trucks"> Trucks</label>
+                        <label><input type="checkbox" id="animal_cart"> Animal Cart</label>
+                        <label><input type="checkbox" id="refrigerator"> Refrigerator</label>
+                        <label><input type="checkbox" id="washing_machine"> Washing Machine</label>
+                        <label><input type="checkbox" id="airconditioner"> Air Conditioner</label>
+                    </div>
+                    <!-- Person Level Details using dropdowns for coded fields -->
+                    <h3>Person Level Details</h3>
+                    <div id="person-inputs">
+                        <label for="person_serial">Person Serial Number:</label>
+                        <input type="text" id="person_serial" placeholder="Enter serial number" required>
+                        
+                        <label for="person_relation">Relation to Head:</label>
+                        <select id="person_relation" required>
+                        <option value="">Select Relation</option>
+                        <option value="1">Self</option>
+                        <option value="2">Spouse of head</option>
+                        <option value="3">Married child</option>
+                        <option value="4">Spouse of married child</option>
+                        <option value="5">Unmarried child</option>
+                        <option value="6">Grandchild</option>
+                        <option value="7">Father/Mother/Father-in-law/Mother-in-law</option>
+                        <option value="8">Brother/Sister/Brother-in-law/Sister-in-law/Other relatives</option>
+                        <option value="9">Servants/Employees/Other non-relatives</option>
+                        </select>
+                        
+                        <label for="person_gender">Gender:</label>
+                        <select id="person_gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="1">Male</option>
+                        <option value="2">Female</option>
+                        <option value="3">Other</option>
+                        </select>
+                        
+                        <label for="person_age">Age (years):</label>
+                        <input type="number" id="person_age" placeholder="Enter age" required>
+                        
+                        <label for="person_marital">Marital Status:</label>
+                        <select id="person_marital" required>
+                        <option value="">Select Status</option>
+                        <option value="1">Never married</option>
+                        <option value="2">Currently married</option>
+                        <option value="3">Widowed</option>
+                        <option value="4">Divorced/Separated</option>
+                        </select>
+                        
+                        <label for="person_education_level">Highest Educational Level Attained:</label>
+                        <select id="person_education_level" required>
+                        <option value="">Select Education Level</option>
+                        <option value="01">Not literate</option>
+                        <option value="02">Literate with non-formal education</option>
+                        <option value="03">Literate with formal education or below primary</option>
+                        <option value="04">Primary</option>
+                        <option value="05">Upper primary/middle</option>
+                        <option value="06">Secondary</option>
+                        <option value="07">Higher secondary</option>
+                        <option value="08">Diploma/certificate course (up to secondary)</option>
+                        <option value="10">Diploma/certificate course (higher secondary)</option>
+                        <option value="11">Diploma/certificate course (graduation & above)</option>
+                        <option value="12">Graduate</option>
+                        <option value="13">Post graduate and above</option>
+                        </select>
+                        
+                        <label for="person_education_years">Total Years of Education Completed:</label>
+                        <input type="number" id="person_education_years" placeholder="Enter total years" required>
+                        
+                        <label for="person_internet">Used Internet in Last 30 Days:</label>
+                        <select id="person_internet" required>
+                        <option value="">Select Option</option>
+                        <option value="1">Yes</option>
+                        <option value="2">No</option>
+                        </select>
+                        
+                        <label for="person_days_away">No. of Days Stayed Away from Home (last 30 days):</label>
+                        <input type="number" id="person_days_away" placeholder="Enter days" required>
+                        
+                        <label for="person_meals_usual">No. of Meals Usually Taken in a Day:</label>
+                        <input type="number" id="person_meals_usual" placeholder="Enter number" required>
+                        
+                        <label for="person_meals_school">No. of Meals from School/Balwadi (last 30 days):</label>
+                        <input type="number" id="person_meals_school" placeholder="Enter number" required>
+                        
+                        <label for="person_meals_employer">No. of Meals from Employer (last 30 days):</label>
+                        <input type="number" id="person_meals_employer" placeholder="Enter number" required>
+                        
+                        <label for="person_meals_others">No. of Meals from Others (last 30 days):</label>
+                        <input type="number" id="person_meals_others" placeholder="Enter number" required>
+                        
+                        <label for="person_meals_payment">No. of Meals on Payment (last 30 days):</label>
+                        <input type="number" id="person_meals_payment" placeholder="Enter number" required>
+                        
+                        <label for="person_meals_home">No. of Meals at Home (last 30 days):</label>
+                        <input type="number" id="person_meals_home" placeholder="Enter number" required>
+                        
+                        <button type="button" onclick="addPerson()">Add Person</button>
+                    </div>
+                    <!-- Table to display added person-level entries -->
+                    <h3>Person Entries</h3>
+                    <div class="table-container">
+                    <table id="personTable">
+                        <thead>
+                        <tr>
+                            <th>Serial No.</th>
+                            <th>Relation</th>
+                            <th>Gender</th>
+                            <th>Age</th>
+                            <th>Marital Status</th>
+                            <th>Education Level</th>
+                            <th>Years Edu</th>
+                            <th>Internet Use</th>
+                            <th>Days Away</th>
+                            <th>Meals Usual</th>
+                            <th>Meals School</th>
+                            <th>Meals Employer</th>
+                            <th>Meals Others</th>
+                            <th>Meals Payment</th>
+                            <th>Meals Home</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                    </div>
+                    <button type="button" onclick="predictExpense()">Predict</button>
+                </form>
+                <div id="prediction-results"></div>
+            </div>
+        </section>
+
+        <!-- Advanced Section -->
+        <section id="advanced" class="content-section">
+            <h2>Advanced Analysis</h2>
+            <div class="advanced-tab-buttons">
+                <button onclick="showAdvancedTab('state-tab')">State-wise</button>
+                <button onclick="showAdvancedTab('district-tab')">District-wise</button>
+                <button onclick="showAdvancedTab('nss-tab')">NSS-Region wise</button>
+            </div>
+
+            <div id="state-tab" class="advanced-tab-content" style="display:block">
+                <h3>State-wise Analysis</h3>
+                <label for="state-select">Select State:</label>
+                <select id="state-select" class="state-select">
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                    <option value="Assam">Assam</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Chhattisgarh">Chhattisgarh</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                    <option value="Jharkhand">Jharkhand</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Manipur">Manipur</option>
+                    <option value="Meghalaya">Meghalaya</option>
+                    <option value="Mizoram">Mizoram</option>
+                    <option value="Nagaland">Nagaland</option>
+                    <option value="Odisha">Odisha</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Sikkim">Sikkim</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Telangana">Telangana</option>
+                    <option value="Tripura">Tripura</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="West Bengal">West Bengal</option>
+                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                    <option value="Chandigarh">Chandigarh</option>
+                    <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                    <option value="Lakshadweep">Lakshadweep</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Puducherry">Puducherry</option>
+                    <option value="Ladakh">Ladakh</option>
+                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                </select>
+                <label for="state-sector">Sector:</label>
+                <select id="state-sector">
+                    <option value="Urban">Urban</option>
+                    <option value="Rural">Rural</option>
+                    <option value="Both">Both</option>
+                </select>
+                <button onclick="fetchDistribution()">Submit</button>
+                <div id="state-charts" class="chart-section">
+                    <div class="chart-row">
+                        <canvas id="state-expensePieChart"></canvas>
+                        <canvas id="state-compareBarChart"></canvas>
+                    </div>
+                    <div id="state-average-info" class="average-info"></div>
+                </div>
+            </div>
+
+            <div id="district-tab" class="advanced-tab-content" style="display:none">
+                <h3>District-wise Analysis</h3>
+                <label for="district-input">District Number (1-71):</label>
+                <input type="number" id="district-input" min="1" max="71" value="1">
+                <label for="district-sector">Sector:</label>
+                <select id="district-sector">
+                    <option value="Urban">Urban</option>
+                    <option value="Rural">Rural</option>
+                    <option value="Both">Both</option>
+                </select>
+                <button onclick="submitDistrictAnalysis()">Submit</button>
+                <div id="district-charts" class="chart-section">
+                    <div class="chart-row">
+                        <canvas id="district-expensePieChart"></canvas>
+                        <canvas id="district-compareBarChart"></canvas>
+                    </div>
+                    <div id="district-average-info" class="district-info"></div>
+                </div>
+            </div>
+
+            <div id="nss-tab" class="advanced-tab-content" style="display:none">
+                <h3>NSS-Region wise Analysis</h3>
+                <label for="nss-input">NSS Region (0-371):</label>
+                <input type="number" id="nss-input" min="0" max="371" value="0">
+                <label for="nss-sector">Sector:</label>
+                <select id="nss-sector">
+                    <option value="Urban">Urban</option>
+                    <option value="Rural">Rural</option>
+                    <option value="Both">Both</option>
+                </select>
+                <button onclick="submitNssAnalysis()">Submit</button>
+                <div id="nss-charts" class="chart-section">
+                    <div class="chart-row">
+                        <canvas id="nss-expensePieChart"></canvas>
+                        <canvas id="nss-compareBarChart"></canvas>
+                    </div>
+                    <div id="nss-average-info" class="nss-info"></div>
+                </div>
+            </div>
+            <canvas id="expensePieChart"></canvas>
+            <canvas id="compareBarChart"></canvas>
+            <div id="average-info" style="margin-top: 30px;"></div>
+        </section>
+    </main>
+    
+    <!-- Chatbot Toggle Button -->
+    <div id="chatbot-toggle">💬</div>
+
+    <!-- Chatbot Window -->
+    <div id="chatbot-window" class="hidden">
+        <div id="chat-header" >
+            
+            <span id="chat-close">×</span>
+        </div>
+        <div id="chat-messages"></div>
+        <input type="text" id="chat-input" placeholder="Type your question and press Enter...">
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
