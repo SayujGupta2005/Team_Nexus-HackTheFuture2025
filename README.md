@@ -104,9 +104,80 @@ python app.py
 
 ---
 
+## 🖥️ Using the Web UI for Predictions
+
+You can interact with our project via a **user-friendly frontend interface** that sends data to the Flask backend and returns MPCE & Total Expense predictions.
+
+### 🔧 Steps to Use the UI
+
+1. **Start the Flask Backend**
+
+Make sure the Flask server is running:
+
+```bash
+python app.py
+```
+
+It will start at: `http://127.0.0.1:5500`
+
+2. **Open the Web UI**
+
+Navigate to the frontend folder (if included in the repo) or open the `index.html` file in your browser.
+
+> *Note: If you're using a separate frontend (e.g., React, HTML, or Streamlit), ensure it makes POST requests to the `/predict` endpoint on port 5500.*
+
+3. **Fill in the Required Details**
+
+* Select **State**, **District**, **Household Type**
+* Add **Household Possessions** (like mobile, TV, vehicle)
+* Enter **Head of Household** details (age, gender, education)
+* Add **Persons in Household** with age, relation, education, etc.
+
+4. **Click “Predict”**
+
+Hit the **Predict** button.
+The model will return:
+
+* ✅ **Monthly Per Capita Expenditure (MPCE)**
+* 💰 **Total Household Expense**
+
+---
+
+### 📦 Sample API Payload (used by UI)
+
+Here’s an example of what the UI sends to the backend (`/predict`):
+
+```json
+{
+  "State": "Gujarat",
+  "District": 24,
+  "Sector": "Urban",
+  "Household Size": 4,
+  "Household Type": 2,
+  "Mobile Handset": 1,
+  "Clothing": 1,
+  ...
+  "entry": [
+    {
+      "relation": 1,
+      "gender": 1,
+      "age": 45,
+      "education_level": 4,
+      "education_years": 10,
+      "internet": 1,
+      "marital": 2,
+      "meals_home": 60,
+      ...
+    },
+    ...
+  ]
+}
+```
+---
+
 ## 🏅 Awards & Achievements
 
-🏆 **Second Prize Winner** – [Hack the Future 2025](https://iitgn.ac.in), IIT Gandhinagar
+🏆 **Second Prize Winner** – [Hack the Future 2025](https://iieciitgn.com/hackthefuture/), IIT Gandhinagar
 🗓️ *March 21–23, 2025*
 👨‍💻 **Team Nexus**:
 
