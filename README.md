@@ -32,7 +32,7 @@ Team **Nexus** built a fully functional **Flask API** that:
 
 ## 🔍 Key Features
 
-* 📊 **MPCE & Total Expense Prediction** (R² = 0.70, MAPE ≈ 23%)
+* 📊 **MPCE & Total Expense Prediction** (R² = 0.7152, MAPE ≈ 23%)
 * 📈 **Top 10 Feature Contributions** included in report
 * 🔍 **Household Lookup** by ID
 * 🌐 **Regional Distribution Analysis** (State, District, NSS Region)
@@ -181,7 +181,7 @@ Here’s an example of what the UI sends to the backend (`/predict`):
 🗓️ *March 21–23, 2025*
 👨‍💻 **Team Nexus**:
 
-* Sayuj Gupta (CSE) – Team Leader, Feature Engineering and Model Testing
+* Sayuj Gupta (CSE) – Team Leader, Feature Engineering and Model Training
 * Himanshu (CSE) – Web Development and Feature Engineering
 * D Barghav (Mech) – Dataset Preparation and Model Training
 * Purushartha Gupta (Civil) – Feature Engineering and Model Training
