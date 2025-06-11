@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import ee
 import numpy as np
 import pandas as pd
 from chat import chat
