@@ -4,7 +4,7 @@ from groq import Groq
 import numpy as np
 
 # === Set up GROQ client ===
-os.environ["GROQ_API_KEY"] = "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"
+os.environ["GROQ_API_KEY"] = "YOUR_API_KEY"
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 # === Load CSV Data ===
