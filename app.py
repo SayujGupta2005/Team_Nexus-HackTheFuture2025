@@ -5,9 +5,15 @@ import numpy as np
 import pandas as pd
 from chat import chat
 import joblib
+from feature_retrieval_arc import g, k, f
+from feature_retrieval_arc import HouseholdDemographicModel, HouseholdExpenseModel
 
 # Load the model
-model = joblib.load("model\\flaml_automl_model.pkl")
+model = joblib.load("model\\xgb_best_model_v2.pkl")
+classification_model = joblib.load("model\\xgb_classifier.pkl")
+# classification_model = joblib.load("model\\rf_classification_model.pkl")
+# regression_model_1 = joblib.load("model\\xgb_regressor_model_above95.pkl")
+# regression_model_2 = joblib.load("model\\xgb_regressor_model_below95.pkl")
 print("Model loaded successfully!!!")
 
 sector_map = {
@@ -158,6 +164,17 @@ nco_sections = {
     '0': 'Armed Forces Occupations'
 }
 
+group_to_num = {'Armed Forces Occupations': 1,
+ 'Managers': 2,
+ 'Professionals': 3,
+ 'Technicians and Associate Professionals': 4,
+ 'Clerical Support Workers': 5,
+ 'Service and Sales Workers': 6,
+ 'Skilled Agricultural, Forestry, and Fishery Workers': 7,
+ 'Craft and Related Trades Workers': 8,
+ 'Plant and Machine Operators and Assemblers': 9,
+ 'Elementary Occupations': 10}
+
 coef_list = [0.08599469450932685, 0.017472204136149014, -0.018403342544424033, 0.014986391813997592, 0.027851679145488552, 0.01154935460641519, -0.005017965598407833, -0.0013414755683872877, -0.0037792362754634186, -0.008714205476360579, 0.010008492824308534]
 coef_list1 = [0.22190073014586958, 0.025360494795706734, 0.2682093576723438]
 coef_list2 = [-0.17588991633308818, 0.16057196556897707, 0.24053641154395702, 0.00976584351888473, -0.01487601462035179]
@@ -192,11 +209,21 @@ def search_household():
 def predict_expense():
     """Predict MPCE and Total Expense based on input data."""
     data = request.json
-    print("Received Data:", data)
-
+    # print(data)
+    # hh_id = data.get("HH_ID",0)
+    # print(hh_id)
     entry = data.get("entry")
+    data.pop("entry")
+    l = [data]
+    # hh_df = pd.DataFrame(l)
+    # person_df = pd.DataFrame(entry)
+    # person_df.drop(columns=["serial"], inplace=True)
+    # hh_df["HH_ID"] = hh_id
+    # person_df["HH_ID"] = hh_id
+    # print(hh_df.columns)
+    # print(person_df.columns)
     # Extract basic inputs
-    hh_id = data.get("HH_ID",0)
+    # entry[0]["HH_ID"] = hh_id
     sector = sector_map.get(data.get("Sector"), 0)
     state = state_map.get(data.get("State"), 0)
     nss_region = int(data.get("NSS Region", 0))
@@ -205,8 +232,8 @@ def predict_expense():
     household_type = int(data.get("Household Type", 1))
     nco_3d = int(data.get("NCO 3D", 0))
     nic_5d = str(data.get("NIC 5D", "00")).zfill(5)
-    nic_section = nic_sections.get(nic_5d[:2], "Unknown")
-    nco_section = nco_sections.get(str(nco_3d)[0], "Unknown")
+    nic_section = ord((nic_sections.get(nic_5d[:2],"01"))[0])-97+1
+    nco_section = group_to_num[nco_sections.get(str(nco_3d)[0], "1")]
     mobile = data.get("Mobile Handset", 0)
 
     # Online Purchase
@@ -278,13 +305,14 @@ def predict_expense():
     home_meal = 0
     internet_use = 0
     x = 0
+    # print(entry[0]["days_away"])
     for i in entry:
         education+= int(i['education_level'])
         education_year+= int(i['education_years'])
-        away_home += int(i['away_home'])
+        away_home += int(i['days_away'])
         day_meal += int(i['meals_usual'])
         home_meal+= int(i['meals_home'])
-        internet_use  = max(int(i['internet_use']), internet_use)
+        internet_use  = max(int(i['internet']), internet_use)
         x += (int(i['meals_school'])+int(i["meals_employer"])+int(i["meals_others"])+int(i["meals_payment"]))
         if i['marital']==2:
             Is_couple+=1
@@ -300,13 +328,27 @@ def predict_expense():
         nco_section, nic_section, mobile, online_activity, entertainment, vehicle, electronic, head_age, head_gender, head_edu,
         head_education_years, male_to_total_ratio, Is_couple, education, education_year, away_home, day_meal, home_meal, away_meal, internet_use
     ]
+    # col1 = f(hh_df, person_df)
+    # print(col1)
+    # col23 = g(hh_df, person_df)
+    # print(col23)
+    # col4 = k(hh_df)
+    # print(col4)
 
     feature_array = np.array(feature_vector).reshape(1, -1)
-
-    # Prediction using real model
+    
+    
+    # feature_array = feature_array.apply(pd.to_numeric, errors='coerce').fillna(0)
+    # feature_array = feature_array.to_numpy(dtype=np.float32)
+    print(feature_array)
+    # # Prediction using real model
+    classprediction = classification_model.predict(feature_array)[0]
+    print(classprediction)
     prediction = model.predict(feature_array)[0]
-    total_expense = round(prediction, 2)
-    mpce = round(total_expense / household_size, 2)
+    print(prediction)
+    total_expense = int(prediction*household_size)
+    mpce = int(prediction)
+    print(total_expense, mpce)
 
     return jsonify({"Total Expense": total_expense, "MPCE": mpce})
 
@@ -393,8 +435,8 @@ def compute_distribution(filtered, india):
     })
 
 # Load data
-hh_test = pd.read_csv("C:\\Users\\mrash\\Desktop\\pr_final\\data\\hh-level-test-data.csv")
-person_test = pd.read_csv("C:\\Users\\mrash\\Desktop\\pr_final\\data\\person-level-test-data.csv")
+hh_test = pd.read_csv("data\\hh-level-test-data.csv")
+person_test = pd.read_csv("data\\person-level-test-data.csv")
 
 # Routes
 @app.route('/chat', methods=['POST'])
