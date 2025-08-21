@@ -199,3 +199,4 @@ Here’s an example of what the UI sends to the backend (`/predict`):
 * 📱 Mobile-friendly frontend for rural outreach
 
 ---
+---
