@@ -1,8 +1,8 @@
 ---
 
-# 🧠 Nexus: Intelligent Expense Estimator
+# Nexus: Intelligent Expense Estimator
 
-### 🏆 *Winner - Second Prize at Hack the Future 2025, IIT Gandhinagar*
+### 🏆 *Winner - Second Prize at Hack the Future 2025, IIT Gandhinagar x Ministry of Statistics (MoSPI)*
 
 An AI-powered system for accurate and instant estimation of **Monthly Per Capita Expenditure (MPCE)** and **Total Household Expense** using socio-economic survey data.
 
